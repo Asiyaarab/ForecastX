@@ -8,8 +8,7 @@
 
 > End-to-end **weekly sales forecasting** for 45 retail locations using Gradient Boosting, macroeconomic CPI signals, and an interactive Streamlit dashboard for inventory planning.
 
-[![ForecastX Dashboard](https://github.com/Asiyaarab/ForecastX/raw/main/sales_forecasting_banner.jpg)](/Asiyaarab/ForecastX/blob/main/sales_forecasting_banner.jpg)
-
+[![ForecastX Dashboard](https://github.com/Asiyaarab/ForecastX/raw/main/sales_forecasting_banner.jpg)](sales_forecasting_banner.jpg)
 ---
 
 ## What it does
