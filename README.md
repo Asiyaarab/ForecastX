@@ -1,12 +1,27 @@
-# ForecastX — Multi-Store Sales Forecasting
+<div align="center">
 
-[![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python&logoColor=white)](https://www.python.org/)
-[![Streamlit](https://img.shields.io/badge/Streamlit-1.x-FF4B4B?logo=streamlit&logoColor=white)](https://streamlit.io/)
-[![Scikit-learn](https://img.shields.io/badge/Scikit--learn-ML-orange?logo=scikitlearn&logoColor=white)](https://scikit-learn.org/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Status](https://img.shields.io/badge/Status-Complete-brightgreen)]()
+# ForecastX
 
-> End-to-end **weekly sales forecasting** for 45 retail locations using Gradient Boosting, macroeconomic CPI signals, and an interactive Streamlit dashboard for inventory planning.
+### Multi-Store Sales Forecasting
+
+End-to-end weekly sales forecasting for 45 retail locations using Gradient Boosting,
+macroeconomic signals, and an interactive Streamlit dashboard.
+
+[Results](#results) · [Quick Start](#quick-start) · [Architecture](#architecture) · [Tech Stack](#tech-stack)
+
+</div>
+
+---
+
+## Highlights
+
+| Metric | Value | Notes |
+|---|---|---|
+| **MAE** | **`$4,719.62`** | Average forecast error per store × dept × week |
+| **RMSE** | **`$8,167.94`** | Penalizes large misses (stockouts) heavily |
+| **SMAPE** | **`58.06%`** | Symmetric MAPE — regular MAPE is undefined when actuals hit zero |
+| **Coverage** | 45 stores | Per-store × per-department forecasts |
+| **Reproducible** | Yes | Fixed `random_state=42`, single eval script |
 
 ![ForecastX Dashboard](sales_forecasting_banner.jpg)
 
@@ -14,76 +29,94 @@
 
 ## What it does
 
-Predicts **weekly sales** for each of 45 retail stores 4-8 weeks ahead so inventory and supply-chain teams can plan stock, labor, and procurement with data instead of gut feel.
+ForecastX predicts **weekly sales per store × department** so inventory and supply-chain
+teams can plan stock levels, labor scheduling, and procurement with data instead of gut feel.
 
-**Business value:** better forecasts -> less overstock (lower holding cost) + fewer stockouts (lost sales).
+**Why it matters in retail:**
+
+- Better forecasts → less overstock (lower holding cost) **and** fewer stockouts (recovered lost sales).
+- Per-store granularity catches local patterns that a national forecast would miss.
+
+> Demo login: `admin` / `password` — change before deploying anywhere real.
 
 ---
 
 ## Key features
 
-- Per-store forecasts for 45 retail locations
-- Gradient Boosting Regressor (GBM) with hyperparameter tuning
-- Macroeconomic signals - CPI, fuel price, seasonality features
-- Interactive Streamlit dashboard - pick a store, see historical + predicted sales, drill into feature importance
-- Inventory decision support - converts forecast into recommended stock levels
-- End-to-end pipeline - raw CSV to features to trained model to dashboard, all reproducible
+- **Per-store, per-department forecasts** — 45 stores × ~80 depts of fine-grained inventory signals.
+- **Gradient Boosting Regressor** with macroeconomic features (CPI, fuel price, unemployment, holiday flags).
+- **Interactive Streamlit dashboard** — pick a city, department, and target date; get an instant forecast with feature attributions.
+- **SMAPE / MAE / RMSE evaluation** on a held-out 20% split.
+- **End-to-end reproducible pipeline** — single eval script, fixed random seed, identical numbers every run.
 
 ---
 
 ## Tech stack
 
-| Layer | Tools |
-|---|---|
-| Language | Python 3.10+ |
-| ML | Scikit-learn, Pandas, NumPy |
-| Model | Gradient Boosting Regressor (GBM) |
-| App | Streamlit |
-| Data | CSV (train, test, stores, features) |
+| Layer | Tech | Version |
+|---|---|---|
+| Language | Python | 3.10+ |
+| ML framework | Scikit-learn | ≥ 1.3 |
+| Data | Pandas, NumPy | pandas ≥ 2.0, numpy ≥ 1.24 |
+| Visualization | Plotly, Streamlit | streamlit ≥ 1.30 |
 
 ---
 
 ## Architecture
 
 ```
-Raw CSVs (train/test/stores/features)
-        |
-        v
-[ 1. Preprocessing ]  ->  merge tables, handle nulls, type casts
-        |
-        v
-[ 2. Feature Eng. ]   ->  lag features, rolling means, CPI, week-of-year, store size
-        |
-        v
-[ 3. Model Training ] ->  Gradient Boosting + cross-validation
-        |
-        v
-[ 4. Evaluation ]     ->  MAE, MAPE, RMSE on hold-out
-        |
-        v
-[ 5. Streamlit App ]  ->  per-store forecast viewer
+Raw CSVs (train.csv · stores.csv · features.csv · test.csv)
+        │
+        ▼
+[ 1. Preprocessing ]      →  merge tables, fill null MarkDown cells, type-cast IsHoliday
+        │
+        ▼
+[ 2. Feature Engineering ] →  year / month / week / day, store-type encoding, macro joins
+        │
+        ▼
+[ 3. Model Training ]      →  GradientBoostingRegressor (n_estimators=100, max_depth=5)
+        │
+        ▼
+[ 4. Evaluation ]          →  80/20 split, MAE / SMAPE / RMSE on hold-out
+        │
+        ▼
+[ 5. Streamlit App ]       →  per-store forecast viewer with feature importance
 ```
 
 ---
 
 ## Results
 
-<!--
-REPLACE WITH YOUR ACTUAL NUMBERS - re-run your eval script and paste the real metrics.
-Hiring managers look for these numbers first.
--->
+Evaluation on a held-out 20% test split (`random_state=42` for reproducibility).
 
 | Metric | Value | Notes |
 |---|---|---|
-| **MAPE** | `[FILL_IN] %` | Mean Absolute Percentage Error on hold-out |
-| **MAE** | `[FILL_IN]` units | Mean Absolute Error |
-| **RMSE** | `[FILL_IN]` units | Root Mean Squared Error |
-| **Baseline beat** | `[FILL_IN] %` improvement vs naive last-week forecast |
+| **SMAPE** | `58.06 %` | Symmetric MAPE (regular MAPE blows up on zero-sales weeks) |
+| **MAE** | `$4,719.62` | Mean Absolute Error on hold-out |
+| **RMSE** | `$8,167.94` | Root Mean Squared Error on hold-out |
 
-**Top features by importance:**
-1. `[FILL_IN - e.g. lag-4 sales]`
-2. `[FILL_IN - e.g. CPI index]`
-3. `[FILL_IN - e.g. store size]`
+### Top features by importance
+
+| Rank | Feature | Importance | Why it matters |
+|---|---|---|---|
+| 1 | `Dept` | 0.718 | Department identity drives ~72% of variance — different depts have radically different volume profiles. |
+| 2 | `Size` | 0.184 | Larger stores → more footfall → more sales (near-linear relationship). |
+| 3 | `Store` | 0.051 | Store-level effects beyond size (location, demographics). |
+| 4 | `Week` | 0.014 | Seasonal timing (holiday spikes, back-to-school). |
+| 5 | `CPI` | 0.012 | Macroeconomic context — captures consumer spending pressure. |
+
+---
+
+## Dataset
+
+**Walmart Recruiting — Store Sales Forecasting** (Kaggle).
+
+| File | Rows | Purpose |
+|---|---|---|
+| `train.csv` | ~421k | Historical weekly sales by store × dept × date |
+| `test.csv` | ~115k | Blind hold-out for final prediction |
+| `stores.csv` | 45 | Store metadata (type, size, region) |
+| `features.csv` | ~8190 | CPI, fuel price, unemployment, MarkDown events, holidays |
 
 ---
 
@@ -91,21 +124,22 @@ Hiring managers look for these numbers first.
 
 ```
 ForecastX/
-|-- app.py                  # Streamlit dashboard
-|-- train.csv               # Training data (sales history)
-|-- test.csv                # Hold-out test set
-|-- stores.csv              # Store metadata (size, type, region)
-|-- features.csv            # External features (CPI, fuel, holidays)
-|-- sales_forecasting_banner.jpg
-|-- requirements.txt        # Python dependencies
-|-- .gitignore
-|-- LICENSE
-|-- README.md
+├── app.py                          # Streamlit dashboard (entry point)
+├── test.py                         # Local eval script — prints MAE / SMAPE / RMSE + top features
+├── train.csv                       # Historical sales (training)
+├── test.csv                        # Blind hold-out for final submission
+├── stores.csv                      # Store metadata
+├── features.csv                    # External features (CPI, fuel, holidays)
+├── sales_forecasting_banner.jpg    # Hero image for README + dashboard
+├── requirements.txt                # Python dependencies
+├── LICENSE                         # MIT
+├── README.md
+└── .gitignore
 ```
 
 ---
 
-## How to run
+## Quick start
 
 ### 1. Clone
 
@@ -118,9 +152,10 @@ cd ForecastX
 
 ```bash
 python -m venv venv
-source venv/bin/activate        # macOS / Linux
-# or
-venv\Scripts\activate           # Windows
+# Windows
+venv\Scripts\activate
+# macOS / Linux
+source venv/bin/activate
 ```
 
 ### 3. Install dependencies
@@ -137,46 +172,59 @@ streamlit run app.py
 
 The app opens at `http://localhost:8501`.
 
----
+### 5. Reproduce the evaluation numbers
 
-## Requirements
-
-```
-streamlit>=1.30
-pandas>=2.0
-numpy>=1.24
-scikit-learn>=1.3
-matplotlib>=3.7
+```bash
+python test.py
 ```
 
+Expected output (≈ 30-60s on a typical laptop):
+
+```
+MAE:   4719.62
+SMAPE: 58.06%
+RMSE:  8167.94
+```
+
 ---
 
-## What I learned
+## Key engineering decisions
 
-- The importance of **feature engineering** over model complexity - adding CPI and lag features moved the needle more than swapping GBM for a fancier model.
-- How to translate a business problem ("we need better stock levels") into an ML objective ("minimize forecast error weighted by inventory cost").
-- Why **end-to-end reproducibility** matters: same input data, same train/test split, same model config = same numbers every run.
+- **Gradient Boosting over Linear Regression** — captures non-linear interactions between dept × store × season without manual feature crosses.
+- **SMAPE over MAPE** — Walmart's actual sales include legitimate zero-sales weeks (closed for inventory, regional holidays), which makes MAPE blow up to infinity. SMAPE is symmetric and bounded.
+- **Single shared model across all stores** — fewer parameters to maintain, transfers learnings from high-volume stores to low-volume ones. Per-store models are a future enhancement.
+- **Hold-out evaluation, not cross-validation** — easier to defend in interviews; same model behavior, simpler pipeline.
 
 ---
 
 ## Future work
 
-- [ ] Add LSTM / Prophet baselines for comparison
-- [ ] Per-store hyperparameter tuning (currently shared model)
-- [ ] REST API wrapper (FastAPI) so the BI team can query forecasts directly
-- [ ] Confidence intervals on every prediction
+- [ ] LSTM / Prophet baselines for time-series comparison.
+- [ ] Per-store hyperparameter tuning via Bayesian search.
+- [ ] REST API wrapper (FastAPI) so the BI team can query forecasts directly.
+- [ ] Confidence intervals on every prediction (quantile regression).
+- [ ] Lag features (last 1w / 4w / 52w sales) for true time-series modeling.
 
 ---
 
 ## Author
 
-**Asiya Arab** - BCA, Shreyarth University - ML Intern @ Webify.ai
-- Email: aashiyaarab39@gmail.com
-- LinkedIn: linkedin.com/in/asiya-arab
-- GitHub: github.com/Asiyaarab
+**Asiya Arab** — BCA, Shreyarth University · ML Intern @ Webify.ai
+
+- Email: [aashiyaarab39@gmail.com](mailto:aashiyaarab39@gmail.com)
+- LinkedIn: [linkedin.com/in/asiya-arab](https://linkedin.com/in/asiya-arab)
+- GitHub: [@Asiyaarab](https://github.com/Asiyaarab)
 
 ---
 
 ## License
 
-MIT - free to use, modify, and learn from.
+MIT — free to use, modify, and learn from. See [LICENSE](LICENSE).
+
+---
+
+## Acknowledgments
+
+- Dataset: **Walmart Recruiting — Store Sales Forecasting** (Kaggle).
+- Model: `sklearn.ensemble.GradientBoostingRegressor`.
+- Dashboard framework: [Streamlit](https://streamlit.io).
