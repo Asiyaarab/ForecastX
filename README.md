@@ -30,6 +30,7 @@ Predicts **weekly sales** for each of 45 Indian retail stores (Delhi, Mumbai, Be
 - All monetary values displayed in **₹ (INR)**
 - Interactive Streamlit dashboard — pick a store & department, see historical sales trend (line chart), Regular vs Holiday average comparison, predicted forecast, and feature importance
 - Forecast trend chart flags whether the prediction is up (🟢) or down (🔴) vs the last actual week, with a ₹ and % delta label
+- **CSV export from the sidebar** — download the current forecast result as a CSV; Admins get an extra button to export the full all-stores dataset
 - End-to-end pipeline — raw CSV to features to trained model to dashboard, all reproducible
 
 ---
