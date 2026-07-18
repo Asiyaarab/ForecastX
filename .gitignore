@@ -115,3 +115,6 @@ checkpoints/
 # ──────────────────────────────────────────────────────────────────────
 .ipynb_checkpoints/
 *.ipynb
+
+.model_cache/
+venv/

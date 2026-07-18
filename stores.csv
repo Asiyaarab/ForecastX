@@ -1,46 +1,46 @@
 Store,Type,Size
-New York,A,151315
-Los Angeles,A,202307
-Chicago,B,37392
-Houston,A,205863
-Phoenix,B,34875
-Philadelphia,A,202505
-San Antonio,B,70713
-San Diego,A,155078
-Dallas,B,125833
-San Jose,B,126512
-Austin,A,207499
-Jacksonville,B,112238
-Fort Worth,A,219622
-Columbus,A,200898
-San Francisco,B,123737
-Charlotte,B,57197
-Indianapolis,B,93188
-Seattle,B,120653
-Denver,A,203819
-Washington,A,203742
-Boston,B,140167
-El Paso,B,119557
-Nashville,B,114533
-Detroit,A,203819
-Oklahoma City,B,128107
-Portland,A,152513
-Las Vegas,A,204184
-Memphis,A,206302
-Louisville,B,93638
-Baltimore,C,42988
-Milwaukee,A,203750
-Albuquerque,A,203007
-Tucson,A,39690
-Fresno,A,158114
-Mesa,B,103681
-Sacramento,A,39910
-Atlanta,C,39910
-Kansas City,C,39690
-Colorado Springs,A,184109
-Miami,A,155083
-Raleigh,A,196321
-Omaha,C,39690
-Long Beach,C,41062
-Virginia Beach,C,39910
-Oakland,B,118221
+Delhi,A,151315
+Mumbai,A,202307
+Bengaluru,B,37392
+Hyderabad,A,205863
+Ahmedabad,B,34875
+Chennai,A,202505
+Kolkata,B,70713
+Surat,A,155078
+Pune,B,125833
+Jaipur,B,126512
+Lucknow,A,207499
+Kanpur,B,112238
+Nagpur,A,219622
+Indore,A,200898
+Thane,B,123737
+Bhopal,B,57197
+Visakhapatnam,B,93188
+Patna,B,120653
+Vadodara,A,203819
+Ghaziabad,A,203742
+Ludhiana,B,140167
+Agra,B,119557
+Nashik,B,114533
+Faridabad,A,203819
+Meerut,B,128107
+Rajkot,A,152513
+Kalyan-Dombivli,A,204184
+Vasai-Virar,A,206302
+Varanasi,B,93638
+Srinagar,C,42988
+Aurangabad,A,203750
+Dhanbad,A,203007
+Amritsar,A,39690
+Navi Mumbai,A,158114
+Allahabad,B,103681
+Ranchi,A,39910
+Howrah,C,39910
+Coimbatore,C,39690
+Jabalpur,A,184109
+Gwalior,A,155083
+Vijayawada,A,196321
+Jodhpur,C,39690
+Madurai,C,41062
+Raipur,C,39910
+Kota,B,118221
