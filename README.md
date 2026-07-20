@@ -119,6 +119,7 @@ This is expected — only ~4 holiday weeks/year exist in the data (vs ~48 regula
 ```
 ForecastX/
 |-- app.py                  # Streamlit dashboard (login, forecasting, charts)
+|-- test.py                 # Quick offline eval — run once locally, paste numbers into README
 |-- train.csv               # Training data (sales history + DepartmentName)
 |-- test.csv                # Hold-out test set
 |-- stores.csv              # Store metadata (Indian cities, size, type)
